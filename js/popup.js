@@ -1,7 +1,11 @@
 const options = [
 	{
-		label: "直接选择",
+		label: "默认",
 		value: "reset",
+	},
+	{
+		label: "自定义",
+		value: "custom",
 	},
 	{
 		label: "百度",

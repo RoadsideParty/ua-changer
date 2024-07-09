@@ -19,6 +19,14 @@ async function changeUa(newUa) {
 		return
 	}
 
+	let customUa = ""
+	if (newUa === "custom") {
+		const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+		customUa = await chrome.tabs.sendMessage(tab.id, "custom")
+		if (!customUa) return
+	}
+
+	const ua = customUa ? customUa : newUa
 	const rule = {
 		id: 2,
 		priority: 2,
@@ -28,7 +36,7 @@ async function changeUa(newUa) {
 				{
 					header: "user-agent",
 					operation: "set",
-					value: newUa,
+					value: ua,
 				},
 			],
 		},
