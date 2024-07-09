@@ -65,12 +65,9 @@ for (const item of options) {
 select.addEventListener("change", (e) => {
 	const ua = e.target.value
 	localStorage.setItem("defaultUa", ua)
-	chrome.storage.local.set({ defaultUa: ua })
 	sendContentMessage(ua)
 })
 
 async function sendContentMessage(newUa) {
 	await chrome.runtime.sendMessage(newUa)
-	// const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-	// await chrome.tabs.sendMessage(tab.id, newUa)
 }
