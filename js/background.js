@@ -4,6 +4,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function changeUa(newUa) {
 	if (!newUa) return
+
+	// 重置ua
 	if (newUa === "reset") {
 		const rules = await chrome.declarativeNetRequest.getDynamicRules()
 		const newRules = {
@@ -13,20 +15,15 @@ async function changeUa(newUa) {
 		chrome.declarativeNetRequest.updateDynamicRules(newRules, () => {
 			if (chrome.runtime.lastError) {
 				console.log(chrome.runtime.lastError)
+				return
 			}
+			chrome.tabs.reload()
 		})
 
 		return
 	}
 
-	let customUa = ""
-	if (newUa === "custom") {
-		const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-		customUa = await chrome.tabs.sendMessage(tab.id, "custom")
-		if (!customUa) return
-	}
-
-	const ua = customUa ? customUa : newUa
+	// 设置ua
 	const rule = {
 		id: 2,
 		priority: 2,
@@ -36,7 +33,7 @@ async function changeUa(newUa) {
 				{
 					header: "user-agent",
 					operation: "set",
-					value: ua,
+					value: newUa,
 				},
 			],
 		},
@@ -54,6 +51,8 @@ async function changeUa(newUa) {
 	chrome.declarativeNetRequest.updateDynamicRules(newRules, () => {
 		if (chrome.runtime.lastError) {
 			console.log(chrome.runtime.lastError)
+			return
 		}
+		chrome.tabs.reload()
 	})
 }

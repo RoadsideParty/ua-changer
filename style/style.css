@@ -4,11 +4,52 @@
   box-sizing: border-box;
 }
 
-body {
-  width: 200px;
+input,
+textarea {
+  outline: none;
 }
 
-body .main .ua-changer {
-  width: 100%;
+body {
+  width: 300px;
+}
+
+body .main .list .item {
+  padding-left: 10px;
   height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #999;
+}
+
+body .main .list .item.active {
+  background-color: #ffeaea;
+}
+
+body .main .ipt {
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 120px;
+  max-height: 240px;
+  padding: 10px;
+  font-size: 14px;
+  border: none;
+  border-bottom: 1px solid #999;
+}
+
+body .main .btns {
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+body .main .btns .btn {
+  width: 50px;
+  height: 30px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+body .main .btns .btn.reset {
+  margin-left: 10px;
 }

@@ -1,12 +1,4 @@
-const options = [
-	{
-		label: "默认",
-		value: "reset",
-	},
-	{
-		label: "自定义",
-		value: "custom",
-	},
+const items = [
 	{
 		label: "百度",
 		value:
@@ -52,26 +44,58 @@ const options = [
 	},
 ]
 
-const select = document.querySelector(".ua-changer")
+const list = document.querySelector(".list")
+const ipt = document.querySelector(".ipt")
+const submitBtn = document.querySelector(".btn")
+const resetBtn = document.querySelector(".btn.reset")
 
-const defaultUa = localStorage.getItem("defaultUa") || ""
+const currentUa = localStorage.getItem("currentUa") || ""
 
-for (const item of options) {
-	const option = document.createElement("option")
-	option.innerText = item.label
-	option.setAttribute("value", item.value)
-	if (item.value === defaultUa) {
-		option.setAttribute("selected", true)
+ipt.value = currentUa
+
+for (const item of items) {
+	const div = document.createElement("div")
+	div.classList.add("item")
+	div.innerText = item.label
+	if (item.value === currentUa) {
+		div.classList.add("active")
 	}
-	select.appendChild(option)
+	div.onclick = (e) => clickItem(e, item.value)
+	list.appendChild(div)
 }
 
-select.addEventListener("change", (e) => {
-	const ua = e.target.value
-	localStorage.setItem("defaultUa", ua)
-	sendContentMessage(ua)
-})
+// 清除item active样式
+function resetItemActiveStyle() {
+	Array.from(list.children).forEach((item) => {
+		item.classList.remove("active")
+	})
+}
 
+// 点击某一项
+function clickItem(e, ua) {
+	resetItemActiveStyle()
+	e.target.classList.add("active")
+	ipt.value = ua
+}
+
+// 点击确认按钮
+submitBtn.onclick = function () {
+	const ua = ipt.value
+	if (!ua) return
+
+	localStorage.setItem("currentUa", ua)
+	sendContentMessage(ua)
+}
+
+// 点击重置按钮
+resetBtn.onclick = function () {
+	resetItemActiveStyle()
+	ipt.value = ""
+	localStorage.removeItem("currentUa")
+	sendContentMessage("reset")
+}
+
+// 发送消息到background
 async function sendContentMessage(newUa) {
 	await chrome.runtime.sendMessage(newUa)
 }
